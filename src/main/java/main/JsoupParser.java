@@ -5,9 +5,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class JsoupParser {
@@ -56,4 +54,28 @@ public class JsoupParser {
         }
         return content;
     }
+
+
+    public static List<String> getLemmasInfo() throws IOException {
+        Set<String> children = getChildren(URL);
+        List<String> tempList = new ArrayList<>();
+        List<String> result = new ArrayList<>();
+        for (String child : children) {
+            Document doc = Jsoup.connect(child)
+                    .maxBodySize(0)
+                    .userAgent(AGENT)
+                    .referrer("http://www.google.com")
+                    .get();
+            List<String> stringsBody = doc.body().getAllElements().eachText();
+            List<String> stringsHead = doc.head().getAllElements().eachText();
+            tempList.addAll(stringsBody);
+            tempList.addAll(stringsHead);
+        }
+        for (String s : tempList) {
+            String[] s1 = s.split(" ");
+            result.addAll(Arrays.asList(s1));
+        }
+        return result;
+    }
+
 }
