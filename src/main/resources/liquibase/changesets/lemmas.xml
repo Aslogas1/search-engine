@@ -1,0 +1,15 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet id="createTable lemma" author="Alexandr Logashin">
+        <createTable tableName="lemma">
+            <column name="id" autoIncrement="true" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="lemma_pkey"/>
+            </column>
+            <column name="site_id" type="bigint"/>
+            <column name="lemma" type="varchar(255)"/>
+            <column name="frequency" type="int"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

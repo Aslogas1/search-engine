@@ -1,0 +1,28 @@
+# example values
+
+indexing-settings:
+  sites:
+    - url: https://www.lenta.ru
+      name: Лента.ру
+    - url: https://www.skillbox.ru
+      name: Skillbox
+    - url: https://www.playback.ru
+      name: PlayBack.Ru
+server:
+  port: 8080
+spring:
+  datasource:
+    platform: postgres
+    username: user
+    password: user
+    url: jdbc:postgresql://localhost:5432/search-engine?useSSL=false&requireSSL=false&allowPublicKeyRetrieval=true
+    driverClassName: org.postgresql.Driver
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+    ddl-auto: create
+  liquibase:
+    change-log: classpath:/liquibase/changelog.xml
+    drop-first: true
+
