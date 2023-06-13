@@ -25,17 +25,22 @@ public class ApiControllerImpl implements ApiController {
 
     @Override
     public ResponseEntity<Responsable> startIndexing() {
-        return null;
+        IndexingResponseOk response = new IndexingResponseOk();
+        response.setResult(true);
+        return ResponseEntity.ok(response);
     }
 
     @Override
     public ResponseEntity<Responsable> stopIndexing() {
-        return null;
+        IndexingResponseOk response = new IndexingResponseOk();
+        response.setResult(true);
+        return ResponseEntity.ok(response);
     }
 
     @Override
     public ResponseEntity<Responsable> indexPage(String url) {
         IndexingResponseOk response = new IndexingResponseOk();
+        response.setResult(true);
         pageService.saveAllPages(url);
         return ResponseEntity.ok(response);
     }

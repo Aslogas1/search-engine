@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@Table(name = "search_index")
 @RequiredArgsConstructor
 public class SearchIndex {
 

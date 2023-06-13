@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class IndexingResponseOk implements Responsable {
 
-    private final boolean result = true;
+    private boolean result = true;
 }

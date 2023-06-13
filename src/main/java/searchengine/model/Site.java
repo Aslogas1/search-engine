@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@Table(name = "Site")
 @RequiredArgsConstructor
 public class Site {
     @Id

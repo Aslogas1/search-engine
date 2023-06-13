@@ -1,7 +1,6 @@
 package searchengine.model;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,7 +10,6 @@ import java.util.List;
 @Table(name = "page")
 @Getter
 @Setter
-@RequiredArgsConstructor
 public class Page {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

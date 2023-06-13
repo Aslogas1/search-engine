@@ -6,7 +6,7 @@ import searchengine.dto.SearchDto;
 
 @Getter
 @Setter
-public class searchResponse implements Responsable {
+public class SearchResponse implements Responsable {
 
     private boolean result;
     private int count;

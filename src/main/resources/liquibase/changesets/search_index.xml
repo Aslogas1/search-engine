@@ -9,7 +9,7 @@
             </column>
             <column name="page_id" type="bigint"/>
             <column name="lemma_id" type="bigint"/>
-            <column name="rank" type="float"/>
+            <column name="lemma_rank" type="float"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>
