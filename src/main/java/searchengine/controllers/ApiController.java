@@ -16,13 +16,13 @@ public interface ApiController {
     ResponseEntity<StatisticsResponse> statistics();
 
     @GetMapping("/startIndexing")
-    ResponseEntity<Responsable> startIndexing();
+    ResponseEntity<Responsable> startIndexing() throws IOException;
 
     @GetMapping("/stopIndexing")
     ResponseEntity<Responsable> stopIndexing();
 
     @PostMapping("/indexPage")
-    ResponseEntity<Responsable> indexPage(String url) throws IOException;
+    ResponseEntity<Responsable> indexPage(String url);
 
     @GetMapping("/search")
     ResponseEntity<Responsable> search(String query, String site,

@@ -1,10 +1,9 @@
 package searchengine.services;
 
 import lombok.RequiredArgsConstructor;
-import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
-import searchengine.dto.Status;
+import searchengine.config.SitesList;
 import searchengine.model.Lemma;
 import searchengine.model.Page;
 import searchengine.model.SearchIndex;
@@ -15,7 +14,6 @@ import searchengine.repository.SearchIndexRepository;
 import searchengine.repository.SiteRepository;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,17 +27,7 @@ public class IndexingService {
     private final LemmaRepository lemmaRepository;
     private final SearchIndexRepository searchIndexRepository;
     private final SiteRepository siteRepository;
-
-
-    public Site saveSite(String url) {
-        Site site = new Site();
-        site.setStatus(Status.INDEXING);
-        site.setUrl(url);
-        site.setName("PlayBack.Ru");
-        site.setStatusTime(new Date().getTime());
-        site.setLastError("Done");
-        return siteRepository.save(site);
-    }
+    private final SitesList sites;
 
     public void getHeadLemmas(Site site, Document doc, Page page) throws IOException {
         LemmaFinder finder = LemmaFinder.getInstance();
@@ -61,27 +49,50 @@ public class IndexingService {
         }
     }
 
-    public void indexing(String url) throws IOException {
-        Set<String> children = jsoupParser.getChildren(url);
-        Site site = saveSite(url);
-        List<String> path = children.stream()
-                .map(s -> s.replaceAll(url, "")).toList();
-        for (String child : children) {
-            Document doc = jsoupParser.generateConnection(child);
-            Connection.Response response;
-            try {
-                response = doc.connection().execute();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Page page = new Page();
-            page.setSiteId(site.getId());
-            page.setContent(doc.html());
-            path.forEach(page::setPath);
-            page.setCode(response.statusCode());
+    public void pageIndexing(String url) {
+        Site site = siteRepository.saveSite(url);
+        Document doc = jsoupParser.generateConnection(url);
+        try {
+            Page page = new Page(site.getId(), url, doc.connection().execute().statusCode(), doc.html());
             pageRepository.save(page);
             getBodyLemmas(site, doc, page);
             getHeadLemmas(site, doc, page);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+        siteRepository.changeSiteStatus(site);
+
+    }
+
+    public void startIndexing() {
+        for (searchengine.config.Site siteConf : sites.getSites()) {
+            removingExistingSitesAndPages(siteConf);
+            Set<String> children = jsoupParser.getChildren(siteConf.getUrl());
+            Site site = siteRepository.saveSite(siteConf.getUrl());
+            List<String> path = children.stream()
+                    .map(s -> s.replaceAll(siteConf.getUrl(), "")).toList();
+            for (String child : children) {
+                Document doc = jsoupParser.generateConnection(child);
+                try {
+                    Page page = pageRepository.generatePage(site, path, doc);
+                    getBodyLemmas(site, doc, page);
+                    getHeadLemmas(site, doc, page);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            siteRepository.changeSiteStatus(site);
+        }
+    }
+
+    private void removingExistingSitesAndPages(searchengine.config.Site siteConf) {
+        pageRepository.findBySiteId(siteRepository.findByUrl(siteConf.getUrl()).getId());
+        pageRepository.flush();
+        siteRepository.delete(siteRepository.findByUrl(siteConf.getUrl()));
+        siteRepository.flush();
+    }
+
+    public void stopIndexing() {
+
     }
 }

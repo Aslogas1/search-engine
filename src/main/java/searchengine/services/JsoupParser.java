@@ -6,10 +6,13 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.concurrent.RecursiveTask;
 import java.util.stream.Collectors;
 
 @Component
-public class JsoupParser {
+public class JsoupParser extends RecursiveTask<Integer> {
+
+    private String path;
 
     public Set<String> getChildren(String link) {
         Document doc;
@@ -36,5 +39,10 @@ public class JsoupParser {
             throw new RuntimeException(e);
         }
         return doc;
+    }
+
+    @Override
+    protected Integer compute() {
+        return null;
     }
 }

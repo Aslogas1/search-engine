@@ -26,7 +26,8 @@ public class ApiControllerImpl implements ApiController {
     }
 
     @Override
-    public ResponseEntity<Responsable> startIndexing() {
+    public ResponseEntity<Responsable> startIndexing() throws IOException {
+        indexingService.startIndexing();
         IndexingResponseOk response = new IndexingResponseOk();
         response.setResult(true);
         return ResponseEntity.ok(response);
@@ -40,10 +41,10 @@ public class ApiControllerImpl implements ApiController {
     }
 
     @Override
-    public ResponseEntity<Responsable> indexPage(String url) throws IOException {
+    public ResponseEntity<Responsable> indexPage(String url) {
         IndexingResponseOk response = new IndexingResponseOk();
-        response.setResult(true);
-        indexingService.indexing(url);
+        response.setResult(response.isResult());
+        indexingService.pageIndexing(url);
         return ResponseEntity.ok(response);
     }
 

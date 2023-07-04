@@ -18,6 +18,7 @@ public class Site {
     @Column(nullable = false)
     private Integer id;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Status status;
     @Column(name = "status_time", nullable = false)
     private Long statusTime;
@@ -27,4 +28,11 @@ public class Site {
     private String url;
     @Column(nullable = false)
     private String name;
+
+    public Site(Status status, Long statusTime, String url, String name) {
+        this.status = status;
+        this.statusTime = statusTime;
+        this.url = url;
+        this.name = name;
+    }
 }
