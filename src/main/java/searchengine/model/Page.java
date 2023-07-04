@@ -1,6 +1,7 @@
 package searchengine.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.List;
 @Table(name = "page")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Page {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +27,13 @@ public class Page {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "page")
     private List<SearchIndex> indexList;
 
-    //По полю path должен быть установлен индекс, чтобы поиск по нему был быстрым,
+    public Page(Integer siteId, String path, Integer code, String content) {
+        this.siteId = siteId;
+        this.path = path;
+        this.code = code;
+        this.content = content;
+    }
+
+//По полю path должен быть установлен индекс, чтобы поиск по нему был быстрым,
     // когда в нём будет много ссылок. Индексы рассмотрены в курсе «Язык запросов SQL».
 }

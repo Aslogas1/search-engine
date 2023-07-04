@@ -26,4 +26,9 @@ public class Lemma {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "lemma")
     private List<SearchIndex> indexList;
 
+    public Lemma(Integer siteId, String lemma, Integer frequency) {
+        this.siteId = siteId;
+        this.lemma = lemma;
+        this.frequency = frequency;
+    }
 }

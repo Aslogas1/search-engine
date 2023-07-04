@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.response.Responsable;
 
+import java.io.IOException;
+
 
 public interface ApiController {
 
@@ -20,7 +22,7 @@ public interface ApiController {
     ResponseEntity<Responsable> stopIndexing();
 
     @PostMapping("/indexPage")
-    ResponseEntity<Responsable> indexPage(String url);
+    ResponseEntity<Responsable> indexPage(String url) throws IOException;
 
     @GetMapping("/search")
     ResponseEntity<Responsable> search(String query, String site,

@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 import searchengine.dto.statistics.StatisticsResponse;
 import searchengine.response.IndexingResponseOk;
 import searchengine.response.Responsable;
-import searchengine.services.PageService;
+import searchengine.services.IndexingService;
 import searchengine.services.StatisticsService;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api")
@@ -16,7 +18,7 @@ import searchengine.services.StatisticsService;
 public class ApiControllerImpl implements ApiController {
 
     private final StatisticsService statisticsService;
-    private final PageService pageService;
+    private final IndexingService indexingService;
 
     @Override
     public ResponseEntity<StatisticsResponse> statistics() {
@@ -38,10 +40,10 @@ public class ApiControllerImpl implements ApiController {
     }
 
     @Override
-    public ResponseEntity<Responsable> indexPage(String url) {
+    public ResponseEntity<Responsable> indexPage(String url) throws IOException {
         IndexingResponseOk response = new IndexingResponseOk();
         response.setResult(true);
-        pageService.saveAllPages(url);
+        indexingService.indexing(url);
         return ResponseEntity.ok(response);
     }
 
