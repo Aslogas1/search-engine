@@ -50,7 +50,7 @@ public class IndexingService {
     }
 
     public void pageIndexing(String url) {
-        Site site = siteRepository.saveSite(url);
+        Site site = siteRepository.saveSite(url, url.substring(12));
         Document doc = jsoupParser.generateConnection(url);
         try {
             Page page = new Page(site.getId(), url, doc.connection().execute().statusCode(), doc.html());
@@ -65,10 +65,10 @@ public class IndexingService {
     }
 
     public void startIndexing() {
+        removingExistingSitesAndPages();
         for (searchengine.config.Site siteConf : sites.getSites()) {
-            removingExistingSitesAndPages(siteConf);
             Set<String> children = jsoupParser.getChildren(siteConf.getUrl());
-            Site site = siteRepository.saveSite(siteConf.getUrl());
+            Site site = siteRepository.saveSite(siteConf.getUrl(), siteConf.getName());
             List<String> path = children.stream()
                     .map(s -> s.replaceAll(siteConf.getUrl(), "")).toList();
             for (String child : children) {
@@ -85,10 +85,10 @@ public class IndexingService {
         }
     }
 
-    private void removingExistingSitesAndPages(searchengine.config.Site siteConf) {
-        pageRepository.findBySiteId(siteRepository.findByUrl(siteConf.getUrl()).getId());
+    private void removingExistingSitesAndPages() {
+        pageRepository.deleteAll();
         pageRepository.flush();
-        siteRepository.delete(siteRepository.findByUrl(siteConf.getUrl()));
+        siteRepository.deleteAll();
         siteRepository.flush();
     }
 

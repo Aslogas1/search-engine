@@ -10,8 +10,6 @@ import searchengine.response.Responsable;
 import searchengine.services.IndexingService;
 import searchengine.services.StatisticsService;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -26,7 +24,7 @@ public class ApiControllerImpl implements ApiController {
     }
 
     @Override
-    public ResponseEntity<Responsable> startIndexing() throws IOException {
+    public ResponseEntity<Responsable> startIndexing() {
         indexingService.startIndexing();
         IndexingResponseOk response = new IndexingResponseOk();
         response.setResult(true);

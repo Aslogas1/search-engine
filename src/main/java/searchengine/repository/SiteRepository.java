@@ -9,10 +9,10 @@ import java.util.Date;
 
 @Repository
 public interface SiteRepository extends JpaRepository<Site, Integer> {
-    Site findByUrl(String url);
 
-    default Site saveSite(String url) {
-        Site site = new Site(Status.INDEXING, new Date().getTime(), url, "PlayBack.Ru");
+
+    default Site saveSite(String url, String name) {
+        Site site = new Site(Status.INDEXING, new Date().getTime(), url, name);
         return save(site);
     }
 
@@ -22,6 +22,6 @@ public interface SiteRepository extends JpaRepository<Site, Integer> {
         if (findAll().size() == 0) {
             site.setStatus(Status.FAILED);
             site.setLastError("Индексация не выполнена");
-        }
+        } else site.setStatus(Status.INDEXED);
     }
 }

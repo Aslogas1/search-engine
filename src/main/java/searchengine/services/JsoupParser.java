@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
 @Component
 public class JsoupParser extends RecursiveTask<Integer> {
 
-    private String path;
-
     public Set<String> getChildren(String link) {
         Document doc;
         try {
