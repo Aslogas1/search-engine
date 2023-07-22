@@ -8,7 +8,8 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "page")
+@Table(name = "page", indexes = @Index(name = "index", columnList = "path")
+)
 @Getter
 @Setter
 @NoArgsConstructor
