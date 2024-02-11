@@ -2,6 +2,12 @@ package searchengine.services;
 
 import org.apache.lucene.morphology.LuceneMorphology;
 import org.apache.lucene.morphology.russian.RussianLuceneMorphology;
+import org.jsoup.nodes.Document;
+import searchengine.model.Lemma;
+import searchengine.model.Page;
+import searchengine.model.SearchIndex;
+import searchengine.model.Site;
+import searchengine.repository.SearchIndexRepository;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -72,5 +78,22 @@ public class LemmaFinder {
                 .replaceAll("([^а-я\\s])", " ")
                 .trim()
                 .split("\\s+");
+    }
+
+    public void generateLemmas(Site site, Document doc, Page page, SearchIndexRepository searchIndexRepository) {
+        try {
+            for (Map.Entry<String, Integer> entry : LemmaFinder.getInstance()
+                    .collectLemmas(doc.head().getAllElements().text()).entrySet()) {
+                Lemma lemma = new Lemma(site.getId(), entry.getKey(), entry.getValue());
+                searchIndexRepository.save(new SearchIndex(page, lemma, lemma.getFrequency().floatValue()));
+            }
+            for (Map.Entry<String, Integer> entry : LemmaFinder.getInstance()
+                    .collectLemmas(doc.body().getAllElements().text()).entrySet()) {
+                Lemma lemma = new Lemma(site.getId(), entry.getKey(), entry.getValue());
+                searchIndexRepository.save(new SearchIndex(page, lemma, lemma.getFrequency().floatValue() * 0.8f));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

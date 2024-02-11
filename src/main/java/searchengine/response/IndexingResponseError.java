@@ -10,32 +10,32 @@ public class IndexingResponseError implements Responsable {
     private final boolean result = false;
     private String error;
 
-    public IndexingResponseError generateStartIndexingError() {
+    public static IndexingResponseError generateStartIndexingError() {
         IndexingResponseError indexingResponseError = new IndexingResponseError();
         indexingResponseError.setError("Индексация уже запущена");
         return indexingResponseError;
     }
 
-    public IndexingResponseError generateStopIndexingError() {
+    public static IndexingResponseError generateStopIndexingError() {
         IndexingResponseError indexingResponseError = new IndexingResponseError();
         indexingResponseError.setError("Индексация не запущена");
         return indexingResponseError;
     }
 
-    public IndexingResponseError generateIndexPageError() {
+    public static IndexingResponseError generateIndexPageError() {
         IndexingResponseError indexingResponseError = new IndexingResponseError();
         indexingResponseError
                 .setError("Данная страница находится за пределами сайтов, указанных в конфигурационном файле");
         return indexingResponseError;
     }
 
-    public IndexingResponseError generateSearchError() {
+    public static IndexingResponseError generateSearchError() {
         IndexingResponseError indexingResponseError = new IndexingResponseError();
         indexingResponseError.setError("Задан пустой поисковый запрос");
         return indexingResponseError;
     }
 
-    public IndexingResponseError generateCommonError() {
+    public static IndexingResponseError generateCommonError() {
         IndexingResponseError indexingResponseError = new IndexingResponseError();
         indexingResponseError.setError("Указанная страница не найдена");
         return indexingResponseError;
