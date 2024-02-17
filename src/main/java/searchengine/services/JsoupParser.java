@@ -29,6 +29,7 @@ public class JsoupParser extends RecursiveTask<Integer> {
     private final SiteRepository siteRepository;
     @Value("${user.agent}")
     private String userAgent;
+    private static final Logger logger = Logger.getLogger("JsoupParser");
 
     //todo расписать этот метод в compute
     public Set<String> getChildren(String link) {
@@ -49,14 +50,12 @@ public class JsoupParser extends RecursiveTask<Integer> {
     // содержимое страницы и перечень ссылок, которые есть на этой странице (значений атрибутов href HTML-тегов <a>), при
     // помощи JSOUP.
     public Document generateConnection(String child) {
-        Document doc = null;
+        Document doc;
         try {
             Logger.getLogger("logger").info("url: " + child);
-            if (!child.contains("@")) {
-                doc = Jsoup.connect(checkFormat(child))
-                        .userAgent(userAgent)
-                        .get();
-            }
+            doc = Jsoup.connect(checkFormat(child))
+                    .userAgent(userAgent)
+                    .get();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -70,12 +69,11 @@ public class JsoupParser extends RecursiveTask<Integer> {
             if (path.isBlank()) {
                 path = "/";
             }
-            page = new Page(site.getId(), path,
-                    doc.connection().execute().statusCode(), doc.html());
+            page = pageRepository.findByContent(doc.html()).isPresent() ? pageRepository.findByContent(doc.html())
+                    .get() : new Page(site.getId(), path, doc.connection().execute().statusCode(), doc.html());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         return pageRepository.save(page);
     }
 
@@ -105,9 +103,13 @@ public class JsoupParser extends RecursiveTask<Integer> {
     public Site indexSite(String url, SitesList sites) {
         Site site = null;
         for (searchengine.config.Site siteConf : sites.getSites()) {
-            if (url.equals(siteConf.getUrl())) {
-                site = generateSite(siteConf);
-            } else site = new Site(Status.INDEXING, new Date().getTime(), url, "Unknown site");
+            if (url.contains(siteConf.getUrl())) {
+                logger.info("siteConf " + siteConf.getUrl());
+                site = siteRepository.findByUrl(siteConf.getUrl()).isPresent() ? siteRepository
+                        .findByUrl(siteConf.getUrl()).get() : generateSite(siteConf);
+            } else site = siteRepository.findByUrl(siteConf.getUrl()).isPresent() ? siteRepository
+                    .findByUrl(siteConf.getUrl()).get() : new Site(
+                            Status.INDEXING, new Date().getTime(), url, "Unknown site");
         }
         return siteRepository.save(Objects.requireNonNull(site));
     }

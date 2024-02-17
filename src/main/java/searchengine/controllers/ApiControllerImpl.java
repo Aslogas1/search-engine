@@ -25,11 +25,10 @@ public class ApiControllerImpl implements ApiController {
 
     @Override
     public ResponseEntity<Responsable> startIndexing() {
-        IndexingResponseOk response = new IndexingResponseOk();
-        indexingService.startIndexing();
-        response.setResult(true);
-        return ResponseEntity.ok(response);
+        return indexingService.startIndexingResponse();
     }
+
+
 
     @Override
     public ResponseEntity<Responsable> stopIndexing() {
@@ -39,11 +38,9 @@ public class ApiControllerImpl implements ApiController {
 
     @Override
     public ResponseEntity<Responsable> indexPage(String url) {
-        IndexingResponseOk response = new IndexingResponseOk();
-        indexingService.pageIndexing(url);
-        response.setResult(true);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(indexingService.indexPageResponse(url));
     }
+
 
     @Override
     public ResponseEntity<Responsable> search(String query, String site, int offset, int limit) {

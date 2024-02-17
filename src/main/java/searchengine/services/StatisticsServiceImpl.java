@@ -13,6 +13,7 @@ import searchengine.repository.PageRepository;
 import searchengine.repository.SiteRepository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,7 +38,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         List<Site> sitesList = sites.getSites();
         for (Site site : sitesList) {
             DetailedStatisticsItem item = new DetailedStatisticsItem();
-            searchengine.model.Site byUrl = siteRepository.findByUrl(site.getUrl());
+            searchengine.model.Site byUrl = siteRepository.findSiteByUrl(site.getUrl());
             if (byUrl != null) {
                 item.setName(Objects.requireNonNull(byUrl).getName());
                 item.setUrl(byUrl.getUrl());
@@ -54,9 +55,9 @@ public class StatisticsServiceImpl implements StatisticsService {
                 item.setUrl(site.getUrl());
                 item.setLemmas(0);
                 item.setPages(0);
-                item.setStatus("Unknown");
-                item.setError("Unknown");
-                item.setStatusTime(0);
+                item.setStatus(" ");
+                item.setError(" ");
+                item.setStatusTime(new Date().getTime());
             }
 
             total.setPages(total.getPages() + pages);
@@ -77,7 +78,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         String error;
         if (byUrl.getLastError() != null) {
             error = byUrl.getLastError();
-        } else error = "No errors";
+        } else error = " ";
         return error;
     }
 }

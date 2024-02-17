@@ -14,7 +14,7 @@ public interface ApiController {
     ResponseEntity<StatisticsResponse> statistics();
 
     @GetMapping("/startIndexing")
-    ResponseEntity<Responsable> startIndexing();
+    ResponseEntity<Responsable> startIndexing() ;
 
     @GetMapping("/stopIndexing")
     ResponseEntity<Responsable> stopIndexing();
